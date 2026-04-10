@@ -38,6 +38,13 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Public config endpoint (exposes non-secret env vars to the client)
+app.get('/api/config', (_req, res) => {
+  res.json({
+    mapboxToken: process.env.MAPBOX_TOKEN || '',
+  });
+});
+
 // Serve static React build in production
 if (process.env.NODE_ENV === 'production') {
   const clientPath = path.resolve('/app/client/dist');

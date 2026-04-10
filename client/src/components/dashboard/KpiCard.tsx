@@ -15,12 +15,14 @@ interface KpiCardProps {
 export function KpiCard({
   title,
   value,
-  change,
-  changePercent,
+  change: rawChange,
+  changePercent: rawChangePercent,
   icon: Icon,
   trend,
   unit,
 }: KpiCardProps) {
+  const change = isNaN(rawChange) ? 0 : rawChange;
+  const changePercent = isNaN(rawChangePercent) ? 0 : rawChangePercent;
   const isPositive = change >= 0;
   const trendColor = isPositive ? '#22c55e' : '#ef4444';
 

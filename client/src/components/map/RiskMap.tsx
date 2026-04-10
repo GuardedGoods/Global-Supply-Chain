@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import MapGL, { NavigationControl, ScaleControl, Marker } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useThemeContext } from '@/components/layout/ThemeProvider';
 import { MapControls } from './MapControls';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import type { WeatherAlert } from '../../../../shared/types/weather';
 import type { PortStatus } from '../../../../shared/types/logistics';
 
@@ -13,10 +14,34 @@ interface RiskMapProps {
   interactive?: boolean;
 }
 
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || '';
+// Cache the token globally so we only fetch once
+let _cachedToken: string | null = null;
+
+function useMapboxToken() {
+  const [token, setToken] = useState<string | null>(_cachedToken);
+  const [loading, setLoading] = useState(_cachedToken === null);
+
+  useEffect(() => {
+    if (_cachedToken !== null) return;
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(data => {
+        _cachedToken = data.mapboxToken || '';
+        setToken(_cachedToken);
+      })
+      .catch(() => {
+        _cachedToken = '';
+        setToken('');
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { token, loading };
+}
 
 export function RiskMap({ weatherAlerts = [], ports = [], className = '', interactive = true }: RiskMapProps) {
   const { theme } = useThemeContext();
+  const { token: MAPBOX_TOKEN, loading: tokenLoading } = useMapboxToken();
   const [viewState, setViewState] = useState({
     longitude: -98.5,
     latitude: 39.8,
@@ -53,12 +78,20 @@ export function RiskMap({ weatherAlerts = [], ports = [], className = '', intera
     });
   }, [ports, layers.ports]);
 
+  if (tokenLoading) {
+    return (
+      <div className={`flex items-center justify-center bg-card rounded-xl border border-border ${className}`}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   if (!MAPBOX_TOKEN) {
     return (
       <div className={`flex items-center justify-center bg-card rounded-xl border border-border ${className}`}>
         <div className="text-center p-8">
           <p className="text-muted-foreground">Map requires MAPBOX_TOKEN</p>
-          <p className="text-xs text-muted-foreground mt-1">Add VITE_MAPBOX_TOKEN to your .env file</p>
+          <p className="text-xs text-muted-foreground mt-1">Add MAPBOX_TOKEN to your .env file</p>
         </div>
       </div>
     );
