@@ -6,6 +6,7 @@ import { weatherCollector } from './weather.collector';
 import { newsCollector } from './news.collector';
 import { currencyCollector } from './currency.collector';
 import { logisticsCollector } from './logistics.collector';
+import { cacheService } from '../services/cache.service';
 import type { CommoditiesData } from '../../../shared/types/commodities';
 import type { EconomicData } from '../../../shared/types/economic';
 import type { WeatherData } from '../../../shared/types/weather';
@@ -44,6 +45,8 @@ async function runFred(): Promise<void> {
       latestData.commodities
     );
     latestData.economic = result.economic;
+    cacheService.set('commodities', latestData.commodities, 900);
+    cacheService.set('economic', latestData.economic, 900);
     dataEventEmitter.emit('data-updated', 'commodities');
     dataEventEmitter.emit('data-updated', 'economic');
     console.log('[scheduler] FRED data updated');
@@ -61,6 +64,7 @@ async function runEia(): Promise<void> {
     } else {
       latestData.commodities = result;
     }
+    cacheService.set('commodities', latestData.commodities, 900);
     dataEventEmitter.emit('data-updated', 'commodities');
     console.log('[scheduler] EIA data updated');
   } catch (err) {
@@ -71,6 +75,7 @@ async function runEia(): Promise<void> {
 async function runWeather(): Promise<void> {
   try {
     latestData.weather = await weatherCollector.collect();
+    cacheService.set('weather', latestData.weather, 900);
     dataEventEmitter.emit('data-updated', 'weather');
     console.log('[scheduler] Weather data updated');
   } catch (err) {
@@ -81,6 +86,7 @@ async function runWeather(): Promise<void> {
 async function runNews(): Promise<void> {
   try {
     latestData.news = await newsCollector.collect();
+    cacheService.set('news', latestData.news, 900);
     dataEventEmitter.emit('data-updated', 'news');
     console.log('[scheduler] News data updated');
   } catch (err) {
@@ -91,6 +97,7 @@ async function runNews(): Promise<void> {
 async function runCurrency(): Promise<void> {
   try {
     latestData.currency = await currencyCollector.collect();
+    cacheService.set('currency', latestData.currency, 900);
     dataEventEmitter.emit('data-updated', 'currency');
     console.log('[scheduler] Currency data updated');
   } catch (err) {
@@ -101,6 +108,7 @@ async function runCurrency(): Promise<void> {
 async function runLogistics(): Promise<void> {
   try {
     latestData.logistics = await logisticsCollector.collect();
+    cacheService.set('logistics', latestData.logistics, 900);
     dataEventEmitter.emit('data-updated', 'logistics');
     console.log('[scheduler] Logistics data updated');
   } catch (err) {
