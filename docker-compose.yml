@@ -1,8 +1,9 @@
+version: '3.8'
+
 services:
   supply-chain-dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/guardedgoods/global-supply-chain:latest
+    container_name: supply-chain
     ports:
       - "9049:9049"
     env_file:
@@ -11,10 +12,36 @@ services:
       - dashboard-data:/app/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9049/api/health"]
-      interval: 30s
+      test: ["CMD", "wget", "-qO-", "http://localhost:9049/api/health"]
+      interval: 60s
       timeout: 10s
       retries: 3
 
 volumes:
   dashboard-data:
+
+# ═══════════════════════════════════════════════════════════════════
+# SYNOLOGY NAS DEPLOYMENT
+# ═══════════════════════════════════════════════════════════════════
+#
+# 1. Open Synology Container Manager
+# 2. Go to Project → Create
+# 3. Name it "supply-chain-dashboard"
+# 4. Paste this entire file as the docker-compose content
+# 5. Create a .env file in the project folder with your API keys:
+#      OPENAI_API_KEY=sk-...
+#      FRED_API_KEY=...
+#      EIA_API_KEY=...
+#      MAPBOX_TOKEN=pk...
+#      NEWSAPI_KEY=...                  (optional)
+#      PORT=9049
+# 6. Click "Build & Start"
+# 7. Dashboard at http://your-nas-ip:9049
+#
+# The image is automatically built and published to GitHub
+# Container Registry whenever code is pushed to the main branch.
+#
+# To update to the latest version:
+#   Container Manager → Project → supply-chain-dashboard → Action → Build
+#   Or SSH: docker compose pull && docker compose up -d
+# ═══════════════════════════════════════════════════════════════════
