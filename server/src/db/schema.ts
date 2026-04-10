@@ -3,7 +3,7 @@ import path from 'path';
 
 const DB_PATH = process.env.NODE_ENV === 'production'
   ? '/app/data/supply-chain.db'
-  : path.join(__dirname, '../../data/supply-chain.db');
+  : path.resolve(process.cwd(), 'server/data/supply-chain.db');
 
 let db: Database.Database;
 

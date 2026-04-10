@@ -53,4 +53,4 @@ ENV PORT=9049
 
 EXPOSE 9049
 
-CMD ["node", "server/dist/index.js"]
+CMD ["node", "server/dist/server/src/index.js"]
