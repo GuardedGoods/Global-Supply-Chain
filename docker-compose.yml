@@ -3,7 +3,7 @@ version: '3.8'
 services:
   supply-chain-dashboard:
     image: ghcr.io/guardedgoods/global-supply-chain:latest
-    container_name: supply-chain
+    container_name: global
     ports:
       - "9049:9049"
     env_file:
