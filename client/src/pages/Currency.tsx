@@ -4,13 +4,23 @@ import { CurrencyChart } from '@/components/charts/CurrencyChart';
 import { PageLoader } from '@/components/common/LoadingSpinner';
 import { RefreshIndicator } from '@/components/common/RefreshIndicator';
 import { formatPercent, cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Minus, DollarSign } from 'lucide-react';
+import { useWatchlist } from '@/hooks/useWatchlist';
+import { TrendingUp, TrendingDown, Minus, DollarSign, Bookmark, Download } from 'lucide-react';
 import type { CurrencyData } from '../../../shared/types/currency';
 
 export function Currency() {
   const { data, loading, error, refetch } = useApi<CurrencyData>(() => api.currency.getAll() as Promise<{ data: CurrencyData }>);
+  const { has, add, remove } = useWatchlist();
 
   if (loading) return <PageLoader />;
+
+  const toggleWatch = (code: string) => {
+    if (has(code)) {
+      remove(code);
+    } else {
+      add({ id: code, name: `USD/${code}`, category: 'currency' });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -19,13 +29,33 @@ export function Currency() {
           <h2 className="text-2xl font-bold">Currency & Trade</h2>
           <p className="text-sm text-muted-foreground mt-1">Exchange rates and currency trends affecting international trade</p>
         </div>
-        <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
+        <div className="flex items-center gap-3">
+          <a
+            href="/api/export/currency.csv"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-border hover:bg-accent transition-colors"
+          >
+            <Download className="h-3 w-3" /> Export CSV
+          </a>
+          <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
+        </div>
       </div>
 
       {/* Rate cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {data?.rates?.map((rate) => (
-          <div key={rate.to} className="glass-card rounded-xl p-4">
+        {data?.rates?.map((rate) => {
+          const watched = has(rate.to);
+          return (
+          <div key={rate.to} className="minimal-card rounded p-4 relative group">
+            <button
+              onClick={() => toggleWatch(rate.to)}
+              className={cn(
+                'absolute top-2 right-2 transition-colors',
+                watched ? 'text-primary' : 'text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground'
+              )}
+              title={watched ? 'Remove from watchlist' : 'Add to watchlist'}
+            >
+              <Bookmark className={cn('h-3.5 w-3.5', watched && 'fill-primary')} />
+            </button>
             <div className="flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-primary" />
               <p className="text-xs text-muted-foreground">USD/{rate.to}</p>
@@ -39,10 +69,11 @@ export function Currency() {
               {rate.changePercent > 0 ? <TrendingUp className="h-3 w-3" /> :
                rate.changePercent < 0 ? <TrendingDown className="h-3 w-3" /> :
                <Minus className="h-3 w-3" />}
-              {formatPercent(rate.changePercent)}
+              <span className="numeric">{formatPercent(rate.changePercent)}</span>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Currency chart */}

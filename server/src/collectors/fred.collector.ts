@@ -15,16 +15,35 @@ interface SeriesDef {
   seriesId: string;
   name: string;
   unit: string;
-  category: 'agricultural' | 'energy' | 'metals';
+  category: 'agricultural' | 'energy' | 'metals' | 'packaging' | 'industrial';
   frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly';
   type: 'commodity' | 'economic';
 }
 
 const COMMODITY_SERIES: SeriesDef[] = [
+  // Energy
   { seriesId: 'DCOILWTICO', name: 'WTI Crude Oil', unit: '$/barrel', category: 'energy', frequency: 'daily', type: 'commodity' },
   { seriesId: 'GASDESW', name: 'Diesel Fuel', unit: '$/gallon', category: 'energy', frequency: 'weekly', type: 'commodity' },
+
+  // Agricultural - grains & staples (CPG-relevant: cereal, baked goods)
   { seriesId: 'WPU0911', name: 'Wheat', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' },
   { seriesId: 'WPU0121', name: 'Corn', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' },
+  { seriesId: 'WPU02', name: 'Processed Foods and Feeds', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' },
+  { seriesId: 'WPU0113', name: 'Oats', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'WPU01830131', name: 'Peanuts, Unshelled', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'WPU01830111', name: 'Soybeans', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'WPU01220105', name: 'Sugar, Raw Cane', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'WPU0612', name: 'Milled Rice', unit: 'Index', category: 'agricultural', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+
+  // Packaging (critical for CPG costs)
+  { seriesId: 'WPU091103', name: 'Pulp, Paper, and Allied Products', unit: 'Index', category: 'packaging', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'WPU0913', name: 'Paper Boxes and Containers', unit: 'Index', category: 'packaging', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'PCU32221132221105', name: 'Corrugated and Solid Fiber Boxes', unit: 'Index', category: 'packaging', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+  { seriesId: 'WPU07210201', name: 'Plastic Resins and Materials', unit: 'Index', category: 'packaging', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
+
+  // Metals / Industrial (can-lining, machinery, etc.)
+  { seriesId: 'WPU102', name: 'Iron and Steel', unit: 'Index', category: 'metals', frequency: 'monthly', type: 'commodity' },
+  { seriesId: 'WPU1017', name: 'Aluminum', unit: 'Index', category: 'metals', frequency: 'monthly', type: 'commodity' }, // TODO: verify series ID
 ];
 
 const ECONOMIC_SERIES: SeriesDef[] = [

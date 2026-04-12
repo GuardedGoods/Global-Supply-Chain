@@ -1,7 +1,7 @@
 export interface CommodityPrice {
   seriesId: string;
   name: string;
-  category: 'agricultural' | 'energy' | 'metals';
+  category: 'agricultural' | 'energy' | 'metals' | 'packaging' | 'industrial';
   value: number;
   unit: string;
   date: string;

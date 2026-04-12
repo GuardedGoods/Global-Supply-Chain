@@ -52,6 +52,10 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      fontFamily: {
+        sans: ['Inter Tight', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'JetBrains Mono', 'ui-monospace', 'monospace'],
+      },
     },
   },
   plugins: [tailwindAnimate],

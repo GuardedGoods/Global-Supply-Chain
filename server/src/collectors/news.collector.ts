@@ -36,15 +36,20 @@ interface NewsApiResponse {
 }
 
 // ── Supply-chain keyword categories ────────────────────────────────────────
+// Keyword lookup order matters: more-specific categories should come first so
+// that (e.g.) "FDA recall" is classified as Regulatory rather than Agriculture.
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  'Port & Shipping': ['port', 'shipping', 'container', 'vessel', 'maritime', 'freight', 'cargo'],
-  'Trade Policy': ['tariff', 'trade war', 'sanction', 'embargo', 'trade deal', 'trade policy', 'customs'],
-  'Energy & Fuel': ['oil', 'fuel', 'energy', 'gasoline', 'diesel', 'petroleum', 'opec', 'pipeline'],
-  'Weather & Climate': ['hurricane', 'storm', 'flood', 'drought', 'wildfire', 'weather', 'climate'],
-  'Labor & Workforce': ['strike', 'labor', 'union', 'worker', 'employment', 'workforce'],
-  'Technology & Cyber': ['cyber', 'hack', 'ransomware', 'technology', 'automation', 'ai'],
-  'Geopolitical': ['war', 'conflict', 'geopolitical', 'military', 'tension', 'crisis'],
-  'Manufacturing': ['factory', 'manufacturing', 'production', 'semiconductor', 'chip'],
+  'Regulatory': ['fda', 'epa', 'usda', 'recall', 'compliance', 'regulation', 'regulatory', 'food safety'],
+  'Trade': ['tariff', 'trade war', 'trade policy', 'trade deal', 'usmca', 'nafta', 'sanction', 'embargo', 'customs'],
+  'Logistics': ['port', 'shipping', 'container', 'vessel', 'maritime', 'freight', 'cargo', 'trucking', 'rail', 'intermodal', 'warehouse'],
+  'Energy': ['oil', 'fuel', 'gasoline', 'diesel', 'petroleum', 'opec', 'pipeline', 'natural gas', 'energy'],
+  'Weather': ['hurricane', 'storm', 'flood', 'drought', 'wildfire', 'weather', 'climate', 'frost', 'heatwave'],
+  'Agriculture': ['harvest', 'crop', 'livestock', 'grain', 'wheat', 'corn', 'soy', 'dairy', 'farm', 'agricultural', 'agriculture'],
+  'Geopolitical': ['war', 'conflict', 'geopolitical', 'military', 'tension', 'crisis', 'invasion'],
+  'Economic': ['inflation', 'recession', 'pmi', 'jobs', 'unemployment', 'cpi', 'ppi', 'gdp', 'fed', 'interest rate'],
+  'Labor': ['strike', 'labor', 'union', 'worker', 'employment', 'workforce', 'walkout'],
+  'Technology': ['cyber', 'hack', 'ransomware', 'technology', 'automation', 'semiconductor', 'chip'],
+  'Manufacturing': ['factory', 'manufacturing', 'production', 'plant closure'],
 };
 
 // ── Collector ──────────────────────────────────────────────────────────────
@@ -99,7 +104,7 @@ export class NewsCollector extends BaseCollector<NewsData> {
   // ── GDELT ──────────────────────────────────────────────────────────────
   private async fetchGdelt(): Promise<NewsArticle[]> {
     const query = encodeURIComponent(
-      'supply chain OR logistics OR shipping OR trade OR tariff OR port disruption'
+      'supply chain OR logistics OR shipping OR port congestion OR tariff OR trade policy OR USMCA OR freight rates OR commodity prices OR food safety recall OR FDA OR retail inventory OR packaging shortage OR grain harvest OR food price inflation'
     );
     const url =
       `https://api.gdeltproject.org/api/v2/doc/doc` +

@@ -1,11 +1,19 @@
 import { cacheService } from '../services/cache.service';
 
+const RETRY_DELAYS_MS = [2000, 8000];
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export abstract class BaseCollector<T> {
   abstract readonly name: string;
   readonly ttlSeconds: number = 900; // 15 minutes
 
   /**
-   * Collect data: checks cache first, falls back to fetchData(), caches result.
+   * Collect data: checks cache first, then attempts fetch with exponential
+   * backoff retries (3 total attempts: immediate, +2s, +8s). Falls back to
+   * `getDefault()` if all attempts fail.
    */
   async collect(): Promise<T> {
     const cacheKey = `collector:${this.name}`;
@@ -21,23 +29,52 @@ export abstract class BaseCollector<T> {
       console.warn(`[${this.name}] Cache read error:`, err);
     }
 
-    // Cache miss — fetch fresh data
-    try {
-      console.log(`[${this.name}] Cache miss, fetching fresh data...`);
-      const data = await this.fetchData();
-      // Store in cache
+    // Cache miss — fetch with retries
+    const totalAttempts = RETRY_DELAYS_MS.length + 1; // 3
+    let lastError: unknown = null;
+
+    for (let attempt = 1; attempt <= totalAttempts; attempt++) {
       try {
-        cacheService.set(cacheKey, data, this.ttlSeconds);
+        if (attempt === 1) {
+          console.log(`[${this.name}] Cache miss, fetching fresh data...`);
+        } else {
+          console.log(
+            `[${this.name}] Retry attempt ${attempt}/${totalAttempts}...`
+          );
+        }
+
+        const data = await this.fetchData();
+
+        // Store in cache
+        try {
+          cacheService.set(cacheKey, data, this.ttlSeconds);
+        } catch (err) {
+          console.warn(`[${this.name}] Cache write error:`, err);
+        }
+        return data;
       } catch (err) {
-        console.warn(`[${this.name}] Cache write error:`, err);
+        lastError = err;
+        console.error(
+          `[${this.name}] Fetch attempt ${attempt}/${totalAttempts} failed:`,
+          err
+        );
+
+        // If more attempts remain, wait the appropriate backoff delay.
+        if (attempt < totalAttempts) {
+          const delay = RETRY_DELAYS_MS[attempt - 1];
+          console.log(
+            `[${this.name}] Waiting ${delay}ms before retry...`
+          );
+          await sleep(delay);
+        }
       }
-      return data;
-    } catch (err) {
-      console.error(`[${this.name}] Fetch error:`, err);
-      // Try stale cache as last resort (re-read without TTL check is not possible,
-      // so return a default)
-      return this.getDefault();
     }
+
+    console.error(
+      `[${this.name}] All ${totalAttempts} fetch attempts failed. Falling back to default.`,
+      lastError
+    );
+    return this.getDefault();
   }
 
   /**

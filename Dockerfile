@@ -53,4 +53,9 @@ ENV PORT=9049
 
 EXPOSE 9049
 
+# Run as non-root user
+RUN addgroup -S app && adduser -S app -G app
+RUN chown -R app:app /app
+USER app
+
 CMD ["node", "server/dist/server/src/index.js"]

@@ -4,17 +4,29 @@ import { CommodityChart } from '@/components/charts/CommodityChart';
 import { PageLoader } from '@/components/common/LoadingSpinner';
 import { RefreshIndicator } from '@/components/common/RefreshIndicator';
 import { formatCurrency, formatPercent, cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useWatchlist } from '@/hooks/useWatchlist';
+import { TrendingUp, TrendingDown, Bookmark, Download } from 'lucide-react';
 import type { CommoditiesData } from '../../../shared/types/commodities';
 
 export function Commodities() {
   const { data, loading, error, refetch } = useApi<CommoditiesData>(() => api.commodities.getAll() as Promise<{ data: CommoditiesData }>);
+  const { has, add, remove } = useWatchlist();
 
   if (loading) return <PageLoader />;
 
   const agricultural = data?.prices?.filter(p => p.category === 'agricultural') || [];
   const energy = data?.prices?.filter(p => p.category === 'energy') || [];
   const metals = data?.prices?.filter(p => p.category === 'metals') || [];
+  const packaging = data?.prices?.filter(p => (p.category as string) === 'packaging') || [];
+  const industrial = data?.prices?.filter(p => (p.category as string) === 'industrial') || [];
+
+  const toggleWatch = (seriesId: string, name: string) => {
+    if (has(seriesId)) {
+      remove(seriesId);
+    } else {
+      add({ id: seriesId, name, category: 'commodity' });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -23,7 +35,15 @@ export function Commodities() {
           <h2 className="text-2xl font-bold">Commodities & Pricing</h2>
           <p className="text-sm text-muted-foreground mt-1">Track commodity prices impacting supply chain costs</p>
         </div>
-        <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
+        <div className="flex items-center gap-3">
+          <a
+            href="/api/export/commodities.csv"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-border hover:bg-accent transition-colors"
+          >
+            <Download className="h-3 w-3" /> Export CSV
+          </a>
+          <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
+        </div>
       </div>
 
       {/* Price summary cards */}
@@ -64,35 +84,53 @@ export function Commodities() {
       {[
         { title: 'Agricultural', items: agricultural },
         { title: 'Energy', items: energy },
+        { title: 'Packaging', items: packaging },
         { title: 'Metals', items: metals },
+        { title: 'Industrial', items: industrial },
       ].map(({ title, items }) => items.length > 0 && (
         <div key={title}>
           <h3 className="text-lg font-semibold mb-3">{title}</h3>
-          <div className="glass-card rounded-xl overflow-hidden">
-            <table className="w-full">
+          <div className="minimal-card rounded overflow-hidden">
+            <table className="w-full data-table">
               <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground">
-                  <th className="text-left p-3">Commodity</th>
-                  <th className="text-right p-3">Price</th>
-                  <th className="text-right p-3">Change</th>
-                  <th className="text-right p-3">% Change</th>
-                  <th className="text-right p-3">Date</th>
+                <tr>
+                  <th className="w-8"></th>
+                  <th>Commodity</th>
+                  <th className="text-right">Price</th>
+                  <th className="text-right">Change</th>
+                  <th className="text-right">% Change</th>
+                  <th className="text-right">Date</th>
                 </tr>
               </thead>
               <tbody>
-                {items.map((item) => (
-                  <tr key={item.seriesId} className="border-b border-border/50 last:border-0">
-                    <td className="p-3 text-sm font-medium">{item.name}</td>
-                    <td className="p-3 text-sm text-right">{formatCurrency(item.value)}</td>
-                    <td className={cn('p-3 text-sm text-right', item.change >= 0 ? 'text-green-500' : 'text-red-500')}>
-                      {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}
-                    </td>
-                    <td className={cn('p-3 text-sm text-right', item.changePercent >= 0 ? 'text-green-500' : 'text-red-500')}>
-                      {formatPercent(item.changePercent)}
-                    </td>
-                    <td className="p-3 text-sm text-right text-muted-foreground">{item.date}</td>
-                  </tr>
-                ))}
+                {items.map((item) => {
+                  const watched = has(item.seriesId);
+                  return (
+                    <tr key={item.seriesId} className="density-row">
+                      <td className="text-center">
+                        <button
+                          onClick={() => toggleWatch(item.seriesId, item.name)}
+                          className={cn(
+                            'inline-flex transition-colors',
+                            watched ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                          )}
+                          title={watched ? 'Remove from watchlist' : 'Add to watchlist'}
+                        >
+                          <Bookmark className={cn('h-3.5 w-3.5', watched && 'fill-primary')} />
+                        </button>
+                      </td>
+                      <td className="font-medium">{item.name}</td>
+                      <td className="numeric text-right">{formatCurrency(item.value)}</td>
+                      <td className={cn('numeric text-right', item.change >= 0 ? 'text-green-500' : 'text-red-500')}>
+                        {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}
+                      </td>
+                      <td className={cn('numeric text-right', item.changePercent >= 0 ? 'text-green-500' : 'text-red-500')}>
+                        {formatPercent(item.changePercent)}
+                      </td>
+                      <td className="numeric text-right text-muted-foreground">{item.date}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

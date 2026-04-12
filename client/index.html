@@ -2,12 +2,90 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Supply Chain Risk Dashboard</title>
+    <meta name="theme-color" content="#0c111b" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Primary SEO -->
+    <title>Supply Chain Risk Dashboard — Real-Time Intelligence for North America</title>
+    <meta name="description" content="Real-time supply chain risk intelligence dashboard covering commodity prices, logistics disruptions, weather alerts, economic indicators, currency shifts, and geopolitical news across North America. Open-source, self-hostable, built for analysts." />
+    <meta name="keywords" content="supply chain risk, commodity prices, logistics dashboard, freight rates, CPG supply chain, North America supply chain, risk intelligence, FRED, EIA, economic indicators, port congestion, weather alerts" />
+    <meta name="author" content="Supply Chain Risk Dashboard" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Supply Chain Risk Dashboard" />
+    <meta property="og:description" content="Real-time supply chain risk intelligence for commodities, logistics, weather, and geopolitical events across North America." />
+    <meta property="og:image" content="/favicon.svg" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Supply Chain Risk Dashboard" />
+    <meta name="twitter:description" content="Real-time supply chain risk intelligence for North America. Open-source and self-hostable." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://rsms.me/" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Mapbox -->
     <link href='https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Structured data: WebApplication + Dataset -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Supply Chain Risk Dashboard",
+      "description": "Real-time supply chain risk intelligence dashboard covering commodity prices, logistics, weather, economic indicators, and geopolitical news for North America.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Commodity price tracking (agricultural, energy, packaging)",
+        "Economic indicators (GDP, CPI, unemployment, rates)",
+        "Weather alerts and severe event tracking",
+        "Supply chain news aggregation with sentiment analysis",
+        "Port congestion and freight indicators",
+        "Currency exchange rate monitoring",
+        "AI-powered risk assessment",
+        "Interactive North America risk map",
+        "CPG-specific scenario modeling",
+        "Customizable watchlists with threshold alerts"
+      ],
+      "isAccessibleForFree": true
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      "name": "North American Supply Chain Risk Dataset",
+      "description": "Aggregated supply chain risk data from public sources including FRED, EIA, NWS, GDELT, and Frankfurter, updated every 15 minutes.",
+      "keywords": ["supply chain", "commodities", "logistics", "CPG", "North America"],
+      "license": "https://opensource.org/licenses/MIT",
+      "creator": {
+        "@type": "Organization",
+        "name": "Supply Chain Risk Dashboard"
+      }
+    }
+    </script>
   </head>
   <body>
+    <noscript>
+      <div style="padding: 2rem; font-family: sans-serif; max-width: 600px; margin: 2rem auto;">
+        <h1>Supply Chain Risk Dashboard</h1>
+        <p>This dashboard requires JavaScript to display real-time data. Please enable JavaScript in your browser.</p>
+        <p>View data sources: <a href="https://fred.stlouisfed.org">FRED</a>, <a href="https://www.eia.gov">EIA</a>, <a href="https://www.weather.gov">NWS</a>, <a href="https://www.gdeltproject.org">GDELT</a>.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

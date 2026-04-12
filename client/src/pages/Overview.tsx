@@ -5,6 +5,8 @@ import { RiskAssessmentPanel } from '@/components/dashboard/RiskAssessmentPanel'
 import { AiSummaryPanel } from '@/components/dashboard/AiSummaryPanel';
 import { AlertBanner } from '@/components/dashboard/AlertBanner';
 import { RiskMap } from '@/components/map/RiskMap';
+import { WatchlistPanel } from '@/components/dashboard/WatchlistPanel';
+import { ScenarioModeler } from '@/components/dashboard/ScenarioModeler';
 import { PageLoader } from '@/components/common/LoadingSpinner';
 import { BarChart3, Fuel, CloudLightning, DollarSign, TrendingUp, Newspaper } from 'lucide-react';
 import type { CommoditiesData } from '../../../shared/types/commodities';
@@ -116,6 +118,15 @@ export function Overview() {
             className="h-full"
           />
         </div>
+      </div>
+
+      {/* Watchlist + Scenario */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <WatchlistPanel
+          commodities={commodities?.prices}
+          rates={currency?.rates}
+        />
+        <ScenarioModeler commodities={commodities?.prices || []} />
       </div>
 
       {/* AI Summary */}

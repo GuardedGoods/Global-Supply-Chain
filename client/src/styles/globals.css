@@ -1,49 +1,59 @@
+@import url('https://rsms.me/inter/inter.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --radius: 0.5rem;
-  }
+:root {
+  /* Typography */
+  --font-sans: 'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
 
-  .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --card: 224 71% 6%;
-    --card-foreground: 213 31% 91%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 222 47% 11%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 223 47% 11%;
-    --muted-foreground: 215 16% 57%;
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --ring: 224 76% 48%;
-    --radius: 0.5rem;
-  }
+  /* Light mode */
+  --background: 0 0% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --primary: 173 80% 30%;        /* teal-700 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --accent: 220 14% 94%;
+  --accent-foreground: 222 47% 11%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 173 80% 30%;
+  --radius: 0.25rem;             /* tighter: 4px not 8px */
+
+  /* Risk colors - muted */
+  --risk-low: 142 71% 35%;       /* green-700 */
+  --risk-medium: 38 92% 50%;     /* amber-500 */
+  --risk-high: 0 72% 51%;        /* red-600 */
+  --risk-critical: 0 73% 31%;    /* red-900 */
+}
+
+.dark {
+  --background: 222 47% 6%;      /* #0c111b-ish */
+  --foreground: 213 31% 91%;
+  --card: 222 47% 8%;
+  --card-foreground: 213 31% 91%;
+  --primary: 173 70% 45%;        /* lighter teal for dark */
+  --primary-foreground: 222 47% 6%;
+  --secondary: 222 47% 11%;
+  --secondary-foreground: 213 31% 91%;
+  --muted: 222 47% 11%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 222 47% 14%;
+  --accent-foreground: 213 31% 91%;
+  --destructive: 0 63% 45%;
+  --destructive-foreground: 213 31% 91%;
+  --border: 222 47% 15%;
+  --input: 222 47% 15%;
+  --ring: 173 70% 45%;
 }
 
 @layer base {
@@ -52,58 +62,80 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  /* Tabular numerals for ALL numbers */
+  .font-mono,
+  [data-numeric],
+  code,
+  pre {
+    font-family: var(--font-mono);
+    font-feature-settings: 'zero', 'ss01';
+  }
+
+  /* Override: any td/th/span containing only a number uses mono + tabular */
+  .numeric {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Replace glass-card with minimal-card */
+.minimal-card {
+  @apply bg-card border border-border rounded;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/40;
-}
-
-/* Map container */
-.mapboxgl-map {
-  border-radius: var(--radius);
-}
-
-/* Glassmorphism card effect */
+/* Keep glass-card as alias for backwards compat but remove blur */
 .glass-card {
-  @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  @apply bg-card border border-border rounded;
 }
 
-/* Risk level colors */
-.risk-low { color: #22c55e; }
-.risk-medium { color: #f59e0b; }
-.risk-high { color: #ef4444; }
-.risk-critical { color: #dc2626; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-muted-foreground/20 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/40; }
 
-/* Pulse animation for alerts */
+.mapboxgl-map { border-radius: var(--radius); }
+
+.risk-low { color: hsl(var(--risk-low)); }
+.risk-medium { color: hsl(var(--risk-medium)); }
+.risk-high { color: hsl(var(--risk-high)); }
+.risk-critical { color: hsl(var(--risk-critical)); }
+
 @keyframes risk-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
-.risk-pulse {
-  animation: risk-pulse 2s ease-in-out infinite;
-}
+.risk-pulse { animation: risk-pulse 2s ease-in-out infinite; }
 
-/* Fade in animation */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
+.animate-fade-in { animation: fade-in 0.2s ease-out; }
+
+/* Density classes - controlled by body data attribute */
+[data-density="compact"] .density-row {
+  @apply py-1.5;
 }
+[data-density="comfortable"] .density-row {
+  @apply py-3;
+}
+
+/* Sharp corners on data tables */
+table { border-collapse: collapse; }
+th, td { border: 0; }
+.data-table {
+  @apply border border-border;
+}
+.data-table th {
+  @apply bg-muted/50 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground border-b border-border px-3 py-2 text-left;
+}
+.data-table td {
+  @apply px-3 py-2 text-sm border-b border-border/50;
+}
+.data-table tr:last-child td { border-bottom: 0; }
+.data-table tr:hover { @apply bg-muted/30; }

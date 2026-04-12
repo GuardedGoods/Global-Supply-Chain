@@ -27,7 +27,7 @@ export function KpiCard({
   const trendColor = isPositive ? '#22c55e' : '#ef4444';
 
   return (
-    <div className="glass-card rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 group">
+    <div className="minimal-card rounded p-4 transition-colors duration-200 hover:shadow-sm group">
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
@@ -39,7 +39,7 @@ export function KpiCard({
             </p>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold tracking-tight">
+            <span className="numeric text-2xl font-bold tracking-tight">
               {value}
             </span>
             {unit && (
@@ -60,9 +60,9 @@ export function KpiCard({
               ) : (
                 <TrendingDown className="h-3 w-3" />
               )}
-              {formatPercent(changePercent)}
+              <span className="numeric">{formatPercent(changePercent)}</span>
             </span>
-            <span className="text-xs text-muted-foreground">
+            <span className="numeric text-xs text-muted-foreground">
               {isPositive ? '+' : ''}
               {change.toFixed(2)}
             </span>
