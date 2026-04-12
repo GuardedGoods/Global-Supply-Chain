@@ -13,17 +13,17 @@ export function Economic() {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Economic Indicators</h2>
-          <p className="text-sm text-muted-foreground mt-1">Key economic metrics affecting supply chain decisions</p>
+          <h2 className="text-xl md:text-2xl font-bold">Economic Indicators</h2>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">Key economic metrics affecting supply chain decisions</p>
         </div>
         <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
       </div>
 
       {/* Indicator cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
         {data?.indicators?.map((indicator) => (
           <div key={indicator.id} className="glass-card rounded-xl p-4">
             <p className="text-xs text-muted-foreground">{indicator.name}</p>
@@ -49,7 +49,7 @@ export function Economic() {
 
       {/* Trend charts */}
       {data?.history && data.history.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {data.history.map((series) => (
             <div key={series.id} className="glass-card rounded-xl p-4">
               <EconomicTrendChart

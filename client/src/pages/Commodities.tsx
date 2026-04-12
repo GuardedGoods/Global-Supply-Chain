@@ -29,13 +29,13 @@ export function Commodities() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Commodities & Pricing</h2>
-          <p className="text-sm text-muted-foreground mt-1">Track commodity prices impacting supply chain costs</p>
+          <h2 className="text-xl md:text-2xl font-bold">Commodities & Pricing</h2>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">Track commodity prices impacting supply chain costs</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <a
             href="/api/export/commodities.csv"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-border hover:bg-accent transition-colors"
@@ -47,7 +47,7 @@ export function Commodities() {
       </div>
 
       {/* Price summary cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
         {data?.prices?.map((commodity) => (
           <div key={commodity.seriesId} className="glass-card rounded-xl p-4">
             <p className="text-xs text-muted-foreground">{commodity.name}</p>
@@ -67,9 +67,9 @@ export function Commodities() {
 
       {/* Charts */}
       {data?.history && data.history.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {data.history.map((series) => (
-            <div key={series.seriesId} className="glass-card rounded-xl p-4">
+            <div key={series.seriesId} className="minimal-card rounded p-4">
               <CommodityChart
                 data={series.data}
                 name={series.name}
@@ -89,8 +89,8 @@ export function Commodities() {
         { title: 'Industrial', items: industrial },
       ].map(({ title, items }) => items.length > 0 && (
         <div key={title}>
-          <h3 className="text-lg font-semibold mb-3">{title}</h3>
-          <div className="minimal-card rounded overflow-hidden">
+          <h3 className="text-base md:text-lg font-semibold mb-3">{title}</h3>
+          <div className="minimal-card rounded overflow-hidden table-scroll">
             <table className="w-full data-table">
               <thead>
                 <tr>

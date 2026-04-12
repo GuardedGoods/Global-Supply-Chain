@@ -48,16 +48,16 @@ export function Overview() {
     })) || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {criticalAlerts.length > 0 && <AlertBanner alerts={criticalAlerts} />}
 
       <div>
-        <h2 className="text-2xl font-bold">Executive Overview</h2>
-        <p className="text-sm text-muted-foreground mt-1">Supply chain risk intelligence at a glance</p>
+        <h2 className="text-xl md:text-2xl font-bold">Executive Overview</h2>
+        <p className="text-xs md:text-sm text-muted-foreground mt-1">Supply chain risk intelligence at a glance</p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 md:gap-4">
         <KpiCard
           title="Crude Oil (WTI)"
           value={crudeOil ? `$${crudeOil.value.toFixed(2)}` : '--'}
@@ -109,9 +109,9 @@ export function Overview() {
       </div>
 
       {/* Risk Assessment + Map Row */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
         <RiskAssessmentPanel assessment={riskAssessment} loading={loadingRisk} />
-        <div className="h-[400px]">
+        <div className="h-[260px] md:h-[400px]">
           <RiskMap
             weatherAlerts={weather?.alerts}
             ports={logistics?.ports}
@@ -121,7 +121,7 @@ export function Overview() {
       </div>
 
       {/* Watchlist + Scenario */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
         <WatchlistPanel
           commodities={commodities?.prices}
           rates={currency?.rates}

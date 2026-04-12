@@ -14,11 +14,11 @@ export function MapView() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold">Risk Map</h2>
-        <p className="text-sm text-muted-foreground mt-1">Interactive view of supply chain risks across North America</p>
+        <h2 className="text-xl md:text-2xl font-bold">Risk Map</h2>
+        <p className="text-xs md:text-sm text-muted-foreground mt-1">Interactive view of supply chain risks across North America</p>
       </div>
 
-      <div className="h-[calc(100vh-180px)]">
+      <div className="h-[60vh] md:h-[calc(100vh-180px)]">
         <RiskMap
           weatherAlerts={weather?.alerts}
           ports={logistics?.ports}

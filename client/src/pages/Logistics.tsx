@@ -22,17 +22,17 @@ export function Logistics() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Logistics & Transportation</h2>
-          <p className="text-sm text-muted-foreground mt-1">Port congestion, freight indicators, and transportation disruptions</p>
+          <h2 className="text-xl md:text-2xl font-bold">Logistics & Transportation</h2>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">Port congestion, freight indicators, and transportation disruptions</p>
         </div>
         <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
       </div>
 
       {/* Port summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <div className="glass-card rounded-xl p-4 text-center">
           <Anchor className="h-5 w-5 mx-auto text-primary" />
           <p className="text-2xl font-bold mt-2">{data?.ports?.length || 0}</p>
@@ -62,15 +62,16 @@ export function Logistics() {
       </div>
 
       {/* Map */}
-      <div className="h-[350px]">
+      <div className="h-[240px] md:h-[350px]">
         <RiskMap ports={data?.ports} className="h-full" />
       </div>
 
       {/* Port details table */}
-      <div className="glass-card rounded-xl overflow-hidden">
+      <div className="minimal-card rounded overflow-hidden">
         <div className="p-4 border-b border-border">
           <h3 className="font-semibold">Port Status</h3>
         </div>
+        <div className="table-scroll">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border text-xs text-muted-foreground">
@@ -97,6 +98,7 @@ export function Logistics() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Freight indicators */}

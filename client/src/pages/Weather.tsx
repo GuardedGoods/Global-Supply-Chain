@@ -27,17 +27,17 @@ export function Weather() {
   const minorAlerts = data?.alerts?.filter(a => a.severity === 'Minor') || [];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Weather & Natural Disasters</h2>
-          <p className="text-sm text-muted-foreground mt-1">Active weather alerts and forecasts for key logistics hubs</p>
+          <h2 className="text-xl md:text-2xl font-bold">Weather & Natural Disasters</h2>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">Active weather alerts and forecasts for key logistics hubs</p>
         </div>
         <RefreshIndicator loading={loading} error={error} lastUpdated={data?.lastUpdated} onRefresh={refetch} />
       </div>
 
       {/* Alert summary */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
         <div className="glass-card rounded-xl p-4 text-center border-l-4 border-red-600">
           <p className="text-2xl font-bold text-red-600">{extremeAlerts.length}</p>
           <p className="text-xs text-muted-foreground">Extreme</p>
@@ -57,7 +57,7 @@ export function Weather() {
       </div>
 
       {/* Map */}
-      <div className="h-[350px]">
+      <div className="h-[240px] md:h-[350px]">
         <RiskMap weatherAlerts={data?.alerts} className="h-full" />
       </div>
 

@@ -23,13 +23,13 @@ export function Currency() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Currency & Trade</h2>
-          <p className="text-sm text-muted-foreground mt-1">Exchange rates and currency trends affecting international trade</p>
+          <h2 className="text-xl md:text-2xl font-bold">Currency & Trade</h2>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">Exchange rates and currency trends affecting international trade</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <a
             href="/api/export/currency.csv"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-border hover:bg-accent transition-colors"
@@ -41,7 +41,7 @@ export function Currency() {
       </div>
 
       {/* Rate cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
         {data?.rates?.map((rate) => {
           const watched = has(rate.to);
           return (
@@ -88,10 +88,11 @@ export function Currency() {
       )}
 
       {/* Rate table */}
-      <div className="glass-card rounded-xl overflow-hidden">
+      <div className="minimal-card rounded overflow-hidden">
         <div className="p-4 border-b border-border">
           <h3 className="font-semibold">Exchange Rate Details</h3>
         </div>
+        <div className="table-scroll">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border text-xs text-muted-foreground">
@@ -118,6 +119,7 @@ export function Currency() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

@@ -2,9 +2,9 @@ import { Database, ExternalLink } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card/50 mt-8">
-      <div className="px-6 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
+    <footer className="border-t border-border bg-card/50 mt-8 safe-pb safe-pl safe-pr">
+      <div className="px-4 md:px-6 py-5 md:py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 md:gap-6 text-xs">
           <div>
             <h4 className="font-semibold mb-2 text-foreground">Supply Chain Risk</h4>
             <p className="text-muted-foreground">
@@ -44,7 +44,7 @@ export function Footer() {
             </p>
           </div>
         </div>
-        <div className="border-t border-border/50 mt-6 pt-4 flex items-center justify-between text-[10px] text-muted-foreground">
+        <div className="border-t border-border/50 mt-5 md:mt-6 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-[10px] text-muted-foreground">
           <span>© {new Date().getFullYear()} Supply Chain Risk Dashboard</span>
           <span>All data sourced from public APIs. Not financial advice.</span>
         </div>
