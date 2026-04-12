@@ -26,6 +26,9 @@ RUN npm run build -w server
 # Stage 2: Production runtime
 FROM node:20-alpine
 
+# Install su-exec for privilege dropping in the entrypoint
+RUN apk add --no-cache su-exec
+
 WORKDIR /app
 
 # Copy workspace config
@@ -45,17 +48,21 @@ COPY --from=builder /app/server/dist ./server/dist
 # Copy built client
 COPY --from=builder /app/client/dist ./client/dist
 
-# Create data directory for SQLite
+# Create data directory for SQLite and set up non-root user
 RUN mkdir -p /app/data
+RUN addgroup -S app && adduser -S app -G app
+RUN chown -R app:app /app
+
+# Entrypoint fixes volume permissions at runtime, then drops to 'app' user.
+# This is needed because named Docker volumes start as root-owned and would
+# otherwise be unwritable by the app user.
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENV NODE_ENV=production
 ENV PORT=9049
 
 EXPOSE 9049
 
-# Run as non-root user
-RUN addgroup -S app && adduser -S app -G app
-RUN chown -R app:app /app
-USER app
-
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["node", "server/dist/server/src/index.js"]
